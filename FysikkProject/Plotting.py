@@ -13,11 +13,9 @@ def plotData(fileName):
 
 def main():
     plotData("..\H1Data.txt")
-    plotData("..\H2Data.txt")
-    plotData("..\H3Data.txt")
-    plotData("..\H4Data.txt")
+    plotData("..\H2DataBehandlet.txt")
     plotData("..\H3DataBehandlet.txt")
-    plotData("..\destFile.txt")
-    plotData("..\destination.txt")
+    plotData("..\H4Data.txt")
+
     
 main()
