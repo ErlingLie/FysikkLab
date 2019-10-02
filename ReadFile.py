@@ -14,4 +14,6 @@ def readFromFile(textFile):
         t.append(float(splitted[0]))
         x.append(float(splitted[1]))
         y.append(float(splitted[2]))
+
+    print("Test")
         
