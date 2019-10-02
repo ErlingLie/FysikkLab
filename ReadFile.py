@@ -1,9 +1,9 @@
 import numpy as np
 
 def readFromFile(textFile):
-    t = []
-    x = []
-    y = []
+    t = np.array()
+    x = np.array()
+    y = np.array()
     
     try:
         f = open(textFile, 'r')
@@ -15,5 +15,5 @@ def readFromFile(textFile):
         x.append(float(splitted[1]))
         y.append(float(splitted[2]))
 
-    print("Test")
+    return t, x, y
         
