@@ -1,19 +1,34 @@
 import numpy as np
 
 def readFromFile(textFile):
-    t = np.array()
-    x = np.array()
-    y = np.array()
-    
+    t_list = []
+    x_list = []
+    y_list = []
+  
+    for i in range(10):
+        t_list.append([])
+        x_list.append([])
+        y_list.append([])
     try:
         f = open(textFile, 'r')
     except:
         print("Could not open " + textFile)
     for line in f:
         splitted = line.split()
-        t.append(float(splitted[0]))
-        x.append(float(splitted[1]))
-        y.append(float(splitted[2]))
-
-    return t, x, y
+        i = 0
+        while(i < len(splitted)):
+            t_list[i//3].append(float(splitted[i].strip()))
+            i +=1
+            x_list[i//3].append(float(splitted[i].strip()))
+            i +=1
+            y_list[i//3].append(float(splitted[i].strip()))
+            i += 1
+    
+    for lst in t_list:
+        lst = np.array(lst)
+    for lst in x_list:
+        lst = np.array(lst)
+    for lst in y_list:
+        lst = np.array(lst)
+    return t_list, x_list, y_list
         
