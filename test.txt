@@ -2,8 +2,9 @@
 
 Hei
 
-<<<<<<< HEAD
 fasdfas
-=======
+
 hei hallovdfved
->>>>>>> d439fed3ff750ca3c23a42440743133aee3dbbda
+
+Marcus sin endring
+
