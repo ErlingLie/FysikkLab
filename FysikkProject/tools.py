@@ -45,18 +45,12 @@ def timeShiftData(fileName):
 
 def fixData2():
     t,x,y = ReadFile.readFromFile("..\H3Behandlet.txt")
-    for i in range(len(t)):
-        print(i)
-        val = t[i][0]
-        for j in range(len(t[i])):
-            t[i][j] -= val
-            t[i][j] = round(t[i][j],2)
     f = open("..\cleanedFile.txt","w")
     for i in range(len(t[0])):
         for j in range(10):
-            f.write(str(t[j][i]) + "\t")
-            f.write(str(x[j][i]) + "\t")
-            f.write(str(y[j][i]) + "\t\t")
+            f.write(format(t[j][i],'.5f') + "\t")
+            f.write(format(x[j][i],'.5f') + "\t")
+            f.write(format(y[j][i],'.5f') + "\t\t")
         f.write("\n")
     f.close()
 
