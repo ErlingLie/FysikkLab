@@ -7,23 +7,14 @@ import numpy as np
 from eksternlab import slope
 from eksternlab import curvature
 from eksternlab import Lane
-<<<<<<< HEAD
-=======
 
-
-
->>>>>>> Erling
 def plotData(fileName):
     t,x,y = ReadFile.readFromFile(fileName)
     for i in range(10):
         plt.plot(t[i],y[i])
 
     plt.show()
-<<<<<<< HEAD
-=======
 
->>>>>>> Erling
-   
     
 def plotInterp():
     x,y,a,r = bane.interpolatePath(100)
@@ -87,9 +78,6 @@ def main():
     interpExperimental(1000)
    #plotLane()
     
-<<<<<<< HEAD
 
-=======
->>>>>>> Erling
     
 main()
