@@ -9,10 +9,12 @@ def readFromFile(textFile):
         t_list.append([])
         x_list.append([])
         y_list.append([])
+    f = ""
     try:
         f = open(textFile, 'r')
     except:
         print("Could not open " + textFile)
+        return [],[],[]
     for line in f:
         splitted = line.split()
         i = 0
@@ -30,5 +32,6 @@ def readFromFile(textFile):
         lst = np.array(lst)
     for lst in y_list:
         lst = np.array(lst)
+    f.close()
     return t_list, x_list, y_list
         
