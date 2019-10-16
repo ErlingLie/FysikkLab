@@ -4,21 +4,27 @@ import bane
 import numpy as np
 from matplotlib import pyplot as plt
 
-def eulersMethod(steps, time):
+
+def findStartIdx(yArr, y):
+    idx = 0
+    while(yArr[idx] > y):
+        idx += 1
+    return idx
+
+def eulersMethod(steps, time, startPos, v0):
     stepSize = time/steps
     x, y, alpha, kappa = bane.interpolatePath(steps)
     s = np.zeros((2, len(x)))
     v = np.zeros(len(x))
-    plt.plot(x,alpha)
-    plt.show()
+    v[0] = v0
     
-    s[0][0] = x[int(0.1*steps)]
-    print(s[0][0])
-    s[1][0] = y[int(0.1*steps)]
-    print(s[1][0])
+    i0 = findStartIdx(y,startPos)
+    s[0][0] = x[i0]
+    s[1][0] = y[i0]
     idx = 0
     for i in range(1, len(x)):
-        for j in range(idx,len(x)):
+        startVal = 0 if(idx<10) else idx-10
+        for j in range(startVal,len(x)):
             if(x[j] > s[0][i-1]):
                 break
             else: 
@@ -35,11 +41,12 @@ def getValueAtTime(arr,tMax, steps, time):
 def main():
     time = 1
     steps = 4000
-    s, v = eulersMethod(steps, time)
+    s, v = eulersMethod(steps, time,0.30)
     plt.plot(s[0],s[1])
     plt.show()
     plt.plot(s[0],v)
     plt.show()
     plt.plot(np.linspace(0,time,steps),s[1])
     
-main()
+if __name__ == '__main__':
+    main()

@@ -27,12 +27,3 @@ def standardDeviation(vals):
 def standardError(vals):
     deviation = standardDeviation(vals)
     return deviation/math.sqrt(len(vals))
-
-
-
-    
-print(mean(oving3))
-
-print(standardDeviation(oving3))
-
-print(standardError(oving3))
