@@ -27,3 +27,7 @@ def standardDeviation(vals):
 def standardError(vals):
     deviation = standardDeviation(vals)
     return deviation/math.sqrt(len(vals))
+
+
+
+print(mean([30.0]*7 + 3*[30.1]))

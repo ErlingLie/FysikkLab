@@ -16,8 +16,9 @@ def eulersMethod(steps, time, startPos, v0):
     x, y, alpha, kappa = bane.interpolatePath(steps)
     s = np.zeros((2, len(x)))
     v = np.zeros(len(x))
-    m = 0.1
+    m = 0.03
     g = 9.81
+    friction = np.zeros(len(x))
     v[0] = v0
     
     i0 = findStartIdx(y,startPos)
@@ -33,9 +34,11 @@ def eulersMethod(steps, time, startPos, v0):
                 idx = j
         s[0][i] = s[0][i-1] + stepSize*v[i-1]*np.cos(-alpha[idx])
         s[1][i] = s[1][i-1] + stepSize*v[i-1]*np.sin(-alpha[idx])
-        v[i] = v[i-1] + stepSize*9.81*np.sin(alpha[idx])/(7/5)
+        v[i] = v[i-1] + stepSize*(9.81*np.sin(alpha[idx])/(7/5) - 0.31*v[i-1])
+        friction[i] = 9.81*np.sin(alpha[idx])/(7/5)*m*2/5
     Fn = m*v**2*kappa + m*g*np.cos(alpha)
-    return s, v, Fn
+    friction[0] = friction[1]
+    return s, v, Fn, friction
 
 
 def getValueAtTime(arr,tMax, steps, time):

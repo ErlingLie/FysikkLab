@@ -12,12 +12,12 @@ from eksternlab import Lane
 
 
 def plotXY(fileName):
-    t,x,y = ReadFile.readFromFile(fileName)
+    t,x,y,S  = ReadFile.readFromFile(fileName)
     for i in range(10):
         plt.plot(np.array(x[i])+1,y[i])
 
 def plotTimeY(fileName):
-    t,x,y = ReadFile.readFromFile(fileName)
+    t,x,y, s = ReadFile.readFromFile(fileName)
     for i in range(10):
         plt.plot(t[i],y[i])
     
@@ -36,7 +36,7 @@ def plotInterp():
 def interpExperimental(steps, filename):
    t, x, y, s = ReadFile.readFromFile(filename)
    vTopp = [[],[]]
-   m = 0.1
+   m = 0.03
    g = 9.81
    #t is two dimentional and this function finds vMax for all iterations
    vX2D = []
@@ -72,8 +72,8 @@ def interpExperimental(steps, filename):
     
        vxMax = vx[index]
        vyMax = vy[index]
-       vTopp[0].append([vxMax])
-       vTopp[1].append([vyMax])
+       vTopp[0].append(vxMax)
+       vTopp[1].append(vyMax)
        #print(format(ymax,'.3f'), format(vxMax,'.3f', ), format(vyMax,'.3f'))
        #print()
    return vTopp, vX2D, vY2D, t_interp, N2D
@@ -121,9 +121,9 @@ def plotTimeN(fileName, steps, Fn):
                 label = "Experimental data" + fileName,
                 color = "orange", linewidth = 2.5)
     ax.plot(t, Fn, label = "Normal force numerical")
-    ax.set_xlabel('t (s)', fontsize = 20)
-    ax.set_ylabel('Fn (N)', fontsize = 20)
-    ax.legend(fontsize = 15)
+    ax.set_xlabel('t (s)', fontsize = 40)
+    ax.set_ylabel('Fn (N)', fontsize = 40)
+    ax.legend(fontsize = 30)
     plt.show()
     
     
@@ -131,11 +131,13 @@ def plotMeanXY(fileName, sNumerical):
     t,x,y, s = ReadFile.readFromFile(fileName)
     fig = plt.figure("XY-plot" + fileName)
     ax = fig.add_subplot(1, 1, 1)
-    
     xMean = meanList(x)
     yMean = meanList(y)
     yStdDiv = standardDeviationList(y)
-    ax.errorbar(np.array(xMean) + 1, yMean, yerr = yStdDiv, errorevery = len(yMean)//10, ecolor = 'black', uplims = True, lolims = True, label = fileName, color = 'orange', linewidth = 2.5)
+    ax.errorbar(np.array(xMean) + 1, yMean, yerr = yStdDiv,
+                errorevery = len(yMean)//10, ecolor = 'black', uplims = True,
+                lolims = True, label = fileName, color = 'orange',
+                linewidth = 2.5)
     ax.plot(sNumerical[0],sNumerical[1], label = "Numerical", linewidth = 2.5)
     ax.set_xlabel('x-posisjon (m)', fontsize = 20)
     ax.set_ylabel('y-posisjon (m)', fontsize = 20)
@@ -173,9 +175,9 @@ def plotMeanTimeS(fileName, sNumerical):
                 label = fileName, linewidth = 2.5, color = 'orange')
     ax.plot(np.linspace(0,t[0][-1],4000), np.sqrt(sNumerical[0]**2 + sNumerical[1]**2),
             label = "Numerical", linewidth = 2.5)
-    ax.set_xlabel('t (s)', fontsize = 20)
-    ax.set_ylabel('S-posisjon (m)', fontsize = 20)
-    ax.legend(fontsize = 15)
+    ax.set_xlabel('t (s)', fontsize = 40)
+    ax.set_ylabel('S-posisjon (m)', fontsize = 40)
+    ax.legend(fontsize = 30)
     plt.show()
 
 def plotTimeVelocity(fileName, steps):
@@ -185,9 +187,10 @@ def plotTimeVelocity(fileName, steps):
         v.append(np.sqrt(vX[i]**2 + vY[i]**2))
     for i in range(len(v)):    
         plt.plot(t,v[i])
-    sNumerical, v, Fn = eulerMethod.eulersMethod(steps, t[-1], 0.40, np.sqrt(vX[0][0]**2 + vY[0][0]**2))
+    sNumerical, v, Fn, friction = eulerMethod.eulersMethod(steps, t[-1], 0.40, np.sqrt(vX[0][0]**2 + vY[0][0]**2))
     plt.plot(t,v)
     plt.show()
+
 
 def plotMeanTimeVelocity(fileName, steps):
     vTopp, vX, vY, t, N = interpExperimental(steps, fileName)
@@ -204,37 +207,78 @@ def plotMeanTimeVelocity(fileName, steps):
                 color = 'orange')
     v0 = vMean[0]
     if(fileName == "..\H4Data.txt"):
-        v0 -= 0.12
-    sNumerical, v, Fn = eulerMethod.eulersMethod(steps, t[-1], 0.40, v0)
+        v0 -= 0.03
+    sNumerical, v, Fn, friction = eulerMethod.eulersMethod(steps, t[-1], 0.40, v0)
     ax.plot(t,v, label = "Numerical velocity", linewidth = 2.5)
-    ax.set_xlabel('t (s)', fontsize = 20)
-    ax.set_ylabel('velocity (m/s)', fontsize = 20)
-    ax.legend(fontsize = 15)
+    ax.set_xlabel('t (s)', fontsize = 40)
+    ax.set_ylabel('velocity (m/s)', fontsize = 40)
+    ax.legend(fontsize = 30)
     plt.show()  
 
 
+
+def plotFriction(fileName, friction, t):
+    fig = plt.figure("Time friction plot" + fileName)
+    ax = fig.add_subplot(1, 1, 1)
+    ax.plot(t, friction, label = "Numerical friction", linewidth = 2.5)
+    ax.set_xlabel('t (s)', fontsize = 40)
+    ax.set_ylabel('friction (N)', fontsize = 40)
+    ax.legend(fontsize = 30)
+    plt.show()
+
 def plotAllData(fileName, steps, h0):
     vTopp, vX, vY, t, N = interpExperimental(steps, fileName)
+    
+    print(fileName, "Alle verdier for hastighet vx i toppen: ", vTopp[0],
+          "\nGjennomsnittsverdi for vx: ", Gjennomsnitt.mean(vTopp[0]),
+          "\n Standard avvik for vx: ", Gjennomsnitt.standardDeviation(vTopp[0]),
+          "\n Standard feil for vx: ", Gjennomsnitt.standardError(vTopp[0]),
+          "\n Normalkraft: ", -0.03*Gjennomsnitt.mean(vTopp[0])**2/0.226 + 0.03*9.81 )
+    print("\n")
     v0 = np.sqrt(vX[0][0]**2 + vY[0][0]**2)
     if fileName == "..\H4Data.txt":
-        v0 -= 0.12
-    sNumerical, v, Fn = eulerMethod.eulersMethod(steps, t[-1],h0, v0)
+        v0 -= 0.03
+    sNumerical, v, Fn, friction = eulerMethod.eulersMethod(steps, t[-1],h0, v0)
+    #plotFriction(fileName, friction, t)
     #plotMeanXY(fileName, sNumerical)
-    #plotMeanTimeVelocity(fileName, 4000)
-    #plotMeanTimeY(fileName, sNumerical)
-    #plotMeanTimeS(fileName, sNumerical)
-    plotTimeN(fileName, steps, Fn)
+    plotMeanTimeVelocity(fileName, 4000)
+    plotMeanTimeS(fileName, sNumerical)
+    #plotTimeN(fileName, steps, Fn)
 
-def main():   
+
+
+def fitCircleToPath():
+    fileName = "..\H4Data.txt"
+    t,x,y, s = ReadFile.readFromFile(fileName)
+    fig = plt.figure("XY-plot 1" + fileName)
+    ax = fig.add_subplot(1, 1, 1)
+    xMean = meanList(x)
+    yMean = meanList(y)
+    yStdDiv = standardDeviationList(y)
+    ax.errorbar(np.array(xMean) + 1, yMean, yerr = yStdDiv,
+                errorevery = len(yMean)//10, ecolor = 'black', uplims = True,
+                lolims = True, label = fileName, color = 'orange',
+                linewidth = 2.5)
+    
+    circle1 = plt.Circle((1.028, -0.0205), 0.226, color='r')
+    circle2 = plt.Circle((1.028, 0.0685), 0.1405, color='blue')
+    #ax.add_artist(circle1)
+    ax.add_artist(circle2)
+    ax.set_xlim(0.6,1.2)
+    ax.set_ylim(-0.2,0.4)
+    ax.set_xlabel('x (m)', fontsize = 40)
+    ax.set_ylabel('y (m)', fontsize = 40)
+    plt.show()
+
+def main():  
+    fitCircleToPath()
+    
     filenames = ["..\H1DataJukset.txt", "..\H2DataBehandlet.txt", "..\H3Behandlet.txt", "..\H4Data.txt"]
     heights = [0.213, 0.2925, 0.365, 0.390]
-   #Plot velocity against time
-   #Experimental
-    #plotTimeVelocity("..\H4Data.txt", 4000)
     steps = 4000
-    for i in range(4):
-        plotAllData(filenames[i], steps, heights[i])
-
+    #for i in range(4):
+    #    plotAllData(filenames[i], steps, heights[i])
+    print()
 
 
 main()
